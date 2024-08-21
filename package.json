@@ -1,0 +1,16 @@
+{
+    "name": "administration",
+    "version": "0.1.0",
+    "description": "Awesome Movie Database Administration Service",
+    "author": "madnoberson",
+    "license": "Apache-2.0",
+    "scripts": {
+        "lint": "eslint src --config ./.eslint.config.mjs"
+    },
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "8.2.x",
+        "@typescript-eslint/parser": "8.2.x",
+        "typescript": "5.5.x",
+        "eslint": "9.9.x"
+    }
+}
