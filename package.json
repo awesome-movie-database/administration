@@ -7,7 +7,11 @@
     "scripts": {
         "lint": "eslint src --config ./.eslint.config.mjs"
     },
+    "dependencies": {
+        "uuid": "10.0.x"
+    },
     "devDependencies": {
+        "@types/uuid": "10.0.x",
         "@typescript-eslint/eslint-plugin": "8.2.x",
         "@typescript-eslint/parser": "8.2.x",
         "typescript": "5.5.x",

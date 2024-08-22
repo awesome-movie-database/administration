@@ -9,6 +9,9 @@
         "allowJs": false,
         "skipLibCheck": true,
         "baseUrl": "src",
+        "paths": {
+            "domain/*": ["./domain/*"]
+        },
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
