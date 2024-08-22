@@ -17,7 +17,7 @@ const TELEGRAM_VALIDATION_PATTERN = /^[a-zA-Z0-9_]+$/
 
 
 export class UserNameValidator {
-    validate(value: string) {
+    validate(value: string): void {
         const nameHasSpaces = value.split(" ").length != 1;
         if (
             value.length < USER_NAME_MIN_LENGTH
@@ -31,7 +31,7 @@ export class UserNameValidator {
 
 
 export class EmailValidator {
-    validate(value: string) {
+    validate(value: string): void {
         if (!EMAIL_VALIDATION_PATTERN.test(value)) {
             throw new InvalidEmailError()
         }
@@ -40,7 +40,7 @@ export class EmailValidator {
 
 
 export class TelegramValidator {
-    validate(value: string) {
+    validate(value: string): void {
         if (
             value.length < TELEGRAM_MIN_LENGTH
             || value.length > TELEGRAM_MAX_LENGTH
