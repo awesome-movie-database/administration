@@ -9,9 +9,9 @@ import { User  } from "domain/entities";
 
 export class CreateUser {
     constructor(
-        protected nameValidator: UserNameValidator,
-        protected emailValidator: EmailValidator,
-        protected telegramValidator: TelegramValidator,
+        protected readonly nameValidator: UserNameValidator,
+        protected readonly emailValidator: EmailValidator,
+        protected readonly telegramValidator: TelegramValidator,
     ) {}
 
     call(
