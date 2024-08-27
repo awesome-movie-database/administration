@@ -12,7 +12,7 @@
     },
     "devDependencies": {
         "@types/uuid": "10.0.x",
-        "@typescript-eslint/eslint-plugin": "8.2.x",
+        "@typescript-eslint/eslint-plugin": "8.3.x",
         "@typescript-eslint/parser": "8.2.x",
         "typescript": "5.5.x",
         "eslint": "9.9.x"
