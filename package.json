@@ -9,10 +9,13 @@
     },
     "dependencies": {
         "uuid": "10.0.x",
-        "pino": "9.3.x"
+        "pino": "9.3.x",
+        "kysely": "0.27.x",
+        "pg": "8.12.x"
     },
     "devDependencies": {
         "@types/uuid": "10.0.x",
+        "@types/pg": "8.11.x",
         "@typescript-eslint/eslint-plugin": "8.3.x",
         "@typescript-eslint/parser": "8.3.x",
         "eslint": "9.9.x",
