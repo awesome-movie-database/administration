@@ -1,4 +1,4 @@
-import { UserId, User } from "domain";
+import { UserId, User } from "src/domain";
 
 
 export interface UserGateway {

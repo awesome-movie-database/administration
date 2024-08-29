@@ -1,10 +1,10 @@
-import { UserId } from "domain/valueObjects";
+import { UserId } from "src/domain/valueObjects";
 import {
     UserNameValidator,
     EmailValidator,
     TelegramValidator,
 } from "domain/validators";
-import { User  } from "domain/entities";
+import { User  } from "src/domain/entities";
 
 
 export class CreateUser {

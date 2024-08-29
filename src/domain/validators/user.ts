@@ -2,7 +2,7 @@ import {
     InvalidUserNameError,
     InvalidEmailError,
     InvalidTelegramError
-} from "domain/errors"
+} from "src/domain/errors"
 
 
 const USER_NAME_MIN_LENGTH = 5

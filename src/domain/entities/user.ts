@@ -1,4 +1,4 @@
-import { UserId } from "domain/valueObjects";
+import { UserId } from "src/domain/valueObjects";
 
 
 export class User {

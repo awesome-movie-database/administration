@@ -1,4 +1,4 @@
-import { UserId } from "domain";
+import { UserId } from "src/domain";
 
 
 export class CreateUserCommand {

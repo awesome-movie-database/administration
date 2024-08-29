@@ -8,16 +8,18 @@
         "strict": true,
         "allowJs": false,
         "skipLibCheck": true,
-        "baseUrl": "src",
+        "baseUrl": ".",
         "paths": {
-            "domain/*": ["./domain/*"],
-            "application/*": ["./application/*"]
+            "domain/*": ["./src/domain/*"],
+            "application/*": ["./src/application/*"],
+            "infrastructure/*": ["./src/infrastructure/*"]
         },
         "moduleResolution": "bundler",
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": true,
+        "preserveSymlinks": true
     },
     "include": ["src"]
 }

@@ -5,7 +5,7 @@ import {
     InvalidEmailError,
     InvalidTelegramError,
     CreateUser,
-} from "domain";
+} from "src/domain";
 import {
     CommandProcessor,
     TransactionProcessor,
@@ -15,8 +15,8 @@ import {
     UserTelegramIsAlreadyTakenError,
     UserGateway,
     TransactionManager,
-} from "application/common";
-import { CreateUserCommand } from "application/commands";
+} from "src/application/common";
+import { CreateUserCommand } from "src/application/commands";
 
 
 export function createUserFactory(
