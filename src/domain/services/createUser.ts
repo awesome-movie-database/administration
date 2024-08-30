@@ -8,11 +8,21 @@ import { User  } from "src/domain/entities";
 
 
 export class CreateUser {
+    protected readonly nameValidator: UserNameValidator
+    protected readonly emailValidator: EmailValidator
+    protected readonly telegramValidator: TelegramValidator
+
     constructor(
-        protected readonly nameValidator: UserNameValidator,
-        protected readonly emailValidator: EmailValidator,
-        protected readonly telegramValidator: TelegramValidator,
-    ) {}
+        createUserProps: {
+            nameValidator: UserNameValidator,
+            emailValidator: EmailValidator,
+            telegramValidator: TelegramValidator,
+        },
+    ) {
+        this.nameValidator = createUserProps.nameValidator
+        this.emailValidator = createUserProps.emailValidator
+        this.telegramValidator = createUserProps.telegramValidator
+    }
 
     execute(
         createUserParams: {

@@ -27,28 +27,36 @@ export function createUserFactory(
         logger: Logger,
     },
 ): CommandProcessor<CreateUserCommand, void> {
-    const createUserProcessor = new CreateUserProcessor(
-        createUserFactoryParams.createUser,
-        createUserFactoryParams.userGateway,
-    )
-    const txProcessor = new TransactionProcessor(
-        createUserProcessor,
-        createUserFactoryParams.txManager,
-    )
-    const logProcessor = new CreateUserLoggingProcessor(
-        txProcessor,
-        createUserFactoryParams.logger,
-    )
+    const createUserProcessor = new CreateUserProcessor({
+        createUser: createUserFactoryParams.createUser,
+        userGateway: createUserFactoryParams.userGateway,
+    })
+    const txProcessor = new TransactionProcessor({
+        processor: createUserProcessor,
+        txManager: createUserFactoryParams.txManager,
+    })
+    const logProcessor = new CreateUserLoggingProcessor({
+        processor: txProcessor,
+        logger: createUserFactoryParams.logger,
+    })
 
     return logProcessor
 }
 
 
 class CreateUserProcessor {
+    protected readonly createUser: CreateUser
+    protected readonly userGateway: UserGateway
+
     constructor(
-        protected readonly createUser: CreateUser,
-        protected readonly userGateway: UserGateway,
-    ) {}
+        createUserProcessorProps: {
+            createUser: CreateUser,
+            userGateway: UserGateway,
+        },
+    ) {
+        this.createUser = createUserProcessorProps.createUser
+        this.userGateway = createUserProcessorProps.userGateway
+    }
 
     async process(command: CreateUserCommand): Promise<void> {
         const userWithSameId = await this.userGateway.byId(command.id)
@@ -91,10 +99,18 @@ class CreateUserProcessor {
 
 
 class CreateUserLoggingProcessor {
+    protected readonly processor: TransactionProcessor
+    protected readonly logger: Logger
+
     constructor(
-        protected readonly processor: TransactionProcessor,
-        protected readonly logger: Logger,
-    ) {}
+        createUserLoggingProcessorProps: {
+            processor: TransactionProcessor,
+            logger: Logger,
+        },
+    ) {
+        this.processor = createUserLoggingProcessorProps.processor
+        this.logger = createUserLoggingProcessorProps.logger
+    }
 
     async process(command: CreateUserCommand): Promise<void> {
         this.logger.debug(
