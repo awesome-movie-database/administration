@@ -95,11 +95,18 @@ class CreateUserLoggingProcessor {
     ) {}
 
     async process(command: CreateUserCommand): Promise<void> {
+        this.logger.debug(
+            {command: command},
+            "'Create user' command processing started",
+        )
+
         try {
             const result = await this.processor.process(command)
         } catch (error) {
             this.processError(error as Error)
         }
+
+        this.logger.debug("'Create User' command processing completed")
     }
 
     protected processError(error: Error): void {
