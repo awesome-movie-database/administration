@@ -1,4 +1,4 @@
 export * from "./dataMappers";
 
 export { postgresConfigFromEnv } from "./config";
-export { kyselyDatabaseFactory } from "./kysely";
+export { kyselyDatabaseFactory, kyselyMigratorFactory } from "./kysely";

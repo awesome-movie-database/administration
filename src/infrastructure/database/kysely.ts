@@ -1,5 +1,14 @@
+import * as path from "path";
+import { promises as fileSystem } from "fs";
+
 import { Pool } from 'pg';
-import { Kysely, PostgresDialect } from 'kysely';
+import {
+    Kysely,
+    PostgresDialect,
+    CamelCasePlugin,
+    Migrator,
+    FileMigrationProvider,
+} from 'kysely';
 
 import { PostgresConfig } from './config';
 import { UsersTable } from "./tables"
@@ -19,6 +28,28 @@ export function kyselyDatabaseFactory(
         database: postgresConfig.database,
     })
     const postgresDialect = new PostgresDialect({ pool })
+    const plugins = [new CamelCasePlugin()]
 
-    return new Kysely<Database>({ dialect: postgresDialect })
+    return new Kysely<Database>({
+        dialect: postgresDialect,
+        plugins: plugins,
+    })
+}
+
+
+export function kyselyMigratorFactory(
+    database: Kysely<unknown>,
+): Migrator {
+    const migrationProvider = new FileMigrationProvider({
+        fs: fileSystem,
+        path: path,
+        migrationFolder: path.resolve(
+            "src/infrastructure/database/migrations",
+        ),
+    })
+
+    return new Migrator({
+        db: database,
+        provider: migrationProvider,
+    })
 }
