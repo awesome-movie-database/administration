@@ -78,7 +78,7 @@ class CreateUserProcessor {
             }
         }
 
-        const newUser = this.createUser.call({
+        const newUser = this.createUser.execute({
             id: command.id,
             name: command.name,
             email: command.email,

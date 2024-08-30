@@ -14,7 +14,7 @@ export class CreateUser {
         protected readonly telegramValidator: TelegramValidator,
     ) {}
 
-    call(
+    execute(
         createUserParams: {
             id: UserId,
             name: string,
