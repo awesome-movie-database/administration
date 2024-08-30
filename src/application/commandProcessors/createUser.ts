@@ -20,22 +20,24 @@ import { CreateUserCommand } from "src/application/commands";
 
 
 export function createUserFactory(
-    createUser: CreateUser,
-    userGateway: UserGateway,
-    txManager: TransactionManager,
-    logger: Logger,
+    createUserFactoryProps: {
+        createUser: CreateUser,
+        userGateway: UserGateway,
+        txManager: TransactionManager,
+        logger: Logger,
+    },
 ): CommandProcessor<CreateUserCommand, void> {
     const createUserProcessor = new CreateUserProcessor(
-        createUser,
-        userGateway,
+        createUserFactoryProps.createUser,
+        createUserFactoryProps.userGateway,
     )
     const txProcessor = new TransactionProcessor(
         createUserProcessor,
-        txManager,
+        createUserFactoryProps.txManager,
     )
     const logProcessor = new CreateUserLoggingProcessor(
         txProcessor,
-        logger,
+        createUserFactoryProps.logger,
     )
 
     return logProcessor
