@@ -15,27 +15,29 @@ export class CreateUser {
     ) {}
 
     call(
-        id: UserId,
-        name: string,
-        email: string | null,
-        telegram: string | null,
-        isActive: boolean,
+        createUserProps: {
+            id: UserId,
+            name: string,
+            email: string | null,
+            telegram: string | null,
+            isActive: boolean,
+        },
     ): User {
-        this.nameValidator.validate(name)
+        this.nameValidator.validate(createUserProps.name)
 
-        if (email) {
-            this.emailValidator.validate(email)
+        if (createUserProps.email) {
+            this.emailValidator.validate(createUserProps.email)
         }
-        if (telegram) {
-            this.telegramValidator.validate(telegram)
+        if (createUserProps.telegram) {
+            this.telegramValidator.validate(createUserProps.telegram)
         }
 
         return new User(
-            id,
-            name,
-            email,
-            telegram,
-            isActive,
+            createUserProps.id,
+            createUserProps.name,
+            createUserProps.email,
+            createUserProps.telegram,
+            createUserProps.isActive,
         )
     }
 }

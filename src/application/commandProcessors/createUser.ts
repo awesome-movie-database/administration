@@ -76,13 +76,13 @@ class CreateUserProcessor {
             }
         }
 
-        const newUser = this.createUser.call(
-            command.id,
-            command.name,
-            command.email,
-            command.telegram,
-            command.isActive,
-        )
+        const newUser = this.createUser.call({
+            id: command.id,
+            name: command.name,
+            email: command.email,
+            telegram: command.telegram,
+            isActive: command.isActive,
+        })
         await this.userGateway.save(newUser);
     }
 }
