@@ -15,7 +15,7 @@ export class CreateUser {
     ) {}
 
     call(
-        createUserProps: {
+        createUserParams: {
             id: UserId,
             name: string,
             email: string | null,
@@ -23,21 +23,21 @@ export class CreateUser {
             isActive: boolean,
         },
     ): User {
-        this.nameValidator.validate(createUserProps.name)
+        this.nameValidator.validate(createUserParams.name)
 
-        if (createUserProps.email) {
-            this.emailValidator.validate(createUserProps.email)
+        if (createUserParams.email) {
+            this.emailValidator.validate(createUserParams.email)
         }
-        if (createUserProps.telegram) {
-            this.telegramValidator.validate(createUserProps.telegram)
+        if (createUserParams.telegram) {
+            this.telegramValidator.validate(createUserParams.telegram)
         }
 
         return new User(
-            createUserProps.id,
-            createUserProps.name,
-            createUserProps.email,
-            createUserProps.telegram,
-            createUserProps.isActive,
+            createUserParams.id,
+            createUserParams.name,
+            createUserParams.email,
+            createUserParams.telegram,
+            createUserParams.isActive,
         )
     }
 }

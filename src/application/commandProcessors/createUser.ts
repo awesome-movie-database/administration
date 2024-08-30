@@ -20,7 +20,7 @@ import { CreateUserCommand } from "src/application/commands";
 
 
 export function createUserFactory(
-    createUserFactoryProps: {
+    createUserFactoryParams: {
         createUser: CreateUser,
         userGateway: UserGateway,
         txManager: TransactionManager,
@@ -28,16 +28,16 @@ export function createUserFactory(
     },
 ): CommandProcessor<CreateUserCommand, void> {
     const createUserProcessor = new CreateUserProcessor(
-        createUserFactoryProps.createUser,
-        createUserFactoryProps.userGateway,
+        createUserFactoryParams.createUser,
+        createUserFactoryParams.userGateway,
     )
     const txProcessor = new TransactionProcessor(
         createUserProcessor,
-        createUserFactoryProps.txManager,
+        createUserFactoryParams.txManager,
     )
     const logProcessor = new CreateUserLoggingProcessor(
         txProcessor,
-        createUserFactoryProps.logger,
+        createUserFactoryParams.logger,
     )
 
     return logProcessor
