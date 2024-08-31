@@ -119,7 +119,7 @@ class CreateUserLoggingProcessor {
         )
 
         try {
-            const result = await this.processor.process(command)
+            await this.processor.process(command)
         } catch (error) {
             this.processError(error as Error)
         }

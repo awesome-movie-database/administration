@@ -1,17 +1,17 @@
 import * as path from "path";
 import { promises as fileSystem } from "fs";
 
-import { Pool } from 'pg';
+import { Pool } from "pg";
 import {
     Kysely,
     PostgresDialect,
     CamelCasePlugin,
     Migrator,
     FileMigrationProvider,
-} from 'kysely';
+} from "kysely";
 
-import { PostgresConfig } from './config';
-import { UsersTable } from "./tables"
+import { PostgresConfig } from "./config";
+import { UsersTable } from "./tables";
 
 
 export interface Database { users: UsersTable }
