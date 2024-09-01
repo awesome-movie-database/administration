@@ -1,4 +1,4 @@
-import { envVarByKey } from "infrastructure/getEnv";
+import { envVarByKey } from "src/infrastructure/getEnv";
 
 
 export function postgresConfigFromEnv(): PostgresConfig {

@@ -1,7 +1,7 @@
 import { TransactionBuilder } from "kysely";
 
 import { UserId, User } from "src/domain";
-import { Database } from "infrastructure/database/kysely";
+import { Database } from "src/infrastructure/database/kysely";
 
 
 interface UserRow {

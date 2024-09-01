@@ -1,1 +1,1 @@
-export { CreateUserCommand } from "./createUser";
+export { type CreateUserCommand } from "./createUser";
