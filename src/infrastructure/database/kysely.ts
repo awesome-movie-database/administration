@@ -1,4 +1,5 @@
 import * as path from "path";
+import { fileURLToPath } from 'url';
 import { promises as fileSystem } from "fs";
 
 import pg from "pg";
@@ -38,13 +39,17 @@ export function kyselyDatabaseFactory(
 
 
 export function kyselyMigratorFactory(
-    database: Kysely<unknown>,
+    database: Kysely<any>,
 ): Migrator {
+    const currentFileName = fileURLToPath(import.meta.url)
+    const currentDirectoryName = path.dirname(currentFileName)
+
     const migrationProvider = new FileMigrationProvider({
         fs: fileSystem,
         path: path,
         migrationFolder: path.resolve(
-            "src/infrastructure/database/migrations",
+            currentDirectoryName,
+            "migrations",
         ),
     })
 

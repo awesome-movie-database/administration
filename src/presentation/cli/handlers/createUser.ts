@@ -17,10 +17,7 @@ import {
 
 
 export const createUserCommand = new Command("create-user")
-    .description(
-        `Creates a new user. Does not notify other
-        services before executing.`
-    )
+    .description(`Creates a new user. Does not notify other services.`)
     .requiredOption("--id <id>", "Id in UUID format.")
     .requiredOption("--name <name>")
     .option("--email <email>")
@@ -31,7 +28,6 @@ export const createUserCommand = new Command("create-user")
 
 async function createUser(options: OptionValues): Promise<void> {
     const postgresConfig = postgresConfigFromEnv()
-
     const kyselyDatabase = kyselyDatabaseFactory(postgresConfig)
     const kyselyTxBuilder = kyselyDatabase.transaction()
 
@@ -53,6 +49,6 @@ async function createUser(options: OptionValues): Promise<void> {
         name: options.name,
         email: options.email,
         telegram: options.telegram,
-        isActive: options.isActive,
+        isActive: options.active,
     })
 }
