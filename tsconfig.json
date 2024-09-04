@@ -8,13 +8,22 @@
         "strict": true,
         "allowJs": false,
         "skipLibCheck": true,
+        "outDir": "./dist",
+        "rootDir": ".",
         "baseUrl": ".",
+        "paths": {"*": ["*"]},
         "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
-        "preserveSymlinks": true
+        "preserveSymlinks": true,
+    },
+    "tsc-alias": {
+        "verbose": false,
+        "resolveFullPaths": true,
+        "fileExtensions": {
+            "inputGlob": "{js,jsx,mjs}",
+            "outputCheck": ["js", "json", "jsx", "mjs"]
+        }
     },
     "include": ["src"]
 }

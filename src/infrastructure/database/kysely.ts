@@ -1,7 +1,7 @@
 import * as path from "path";
 import { promises as fileSystem } from "fs";
 
-import { Pool } from "pg";
+import pg from "pg";
 import {
     Kysely,
     PostgresDialect,
@@ -20,7 +20,7 @@ export interface Database { users: UsersTable }
 export function kyselyDatabaseFactory(
     postgresConfig: PostgresConfig,
 ): Kysely<Database> {
-    const pool = new Pool({
+    const pool = new pg.Pool({
         user: postgresConfig.username,
         password: postgresConfig.password,
         host: postgresConfig.host,

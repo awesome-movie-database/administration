@@ -3,7 +3,7 @@ import {
     UserNameValidator,
     EmailValidator,
     TelegramValidator,
-} from "domain/validators";
+} from "src/domain/validators";
 import { User  } from "src/domain/entities";
 
 
