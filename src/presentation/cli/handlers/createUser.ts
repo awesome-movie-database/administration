@@ -17,7 +17,7 @@ import {
 
 
 export const createUserCommand = new Command("create-user")
-    .description(`Creates a new user. Does not notify other services.`)
+    .description("Creates a new user. Does not notify other services.")
     .requiredOption("--id <id>", "Id in UUID format.")
     .requiredOption("--name <name>")
     .option("--email <email>")

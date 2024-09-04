@@ -1,5 +1,5 @@
 import * as path from "path";
-import { fileURLToPath } from 'url';
+import { fileURLToPath } from "url";
 import { promises as fileSystem } from "fs";
 
 import pg from "pg";
