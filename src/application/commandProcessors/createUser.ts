@@ -1,5 +1,3 @@
-import { Logger } from "pino";
-
 import {
     InvalidUserNameError,
     InvalidEmailError,
@@ -15,6 +13,7 @@ import {
     UserTelegramIsAlreadyTakenError,
     UserGateway,
     TransactionManager,
+    Logger,
 } from "src/application/common";
 import { CreateUserCommand } from "src/application/commands";
 
@@ -114,8 +113,8 @@ class CreateUserLoggingProcessor {
 
     async process(command: CreateUserCommand): Promise<void> {
         this.logger.debug(
-            {command: command},
             "'Create user' command processing started",
+            {command: command},
         )
 
         try {
@@ -154,8 +153,8 @@ class CreateUserLoggingProcessor {
             )
         } else {
             this.logger.error(
-                {"traceback": error.stack},
                 "Unexpected error occurred",
+                {"traceback": error.stack},
             )
         }
         throw error

@@ -1,5 +1,5 @@
 import { Command, OptionValues } from "commander";
-import { pino } from "pino";
+import { v7 as uuid7 } from "uuid";
 
 import {
     UserId,
@@ -8,12 +8,20 @@ import {
     TelegramValidator,
     CreateUser,
 } from "src/domain";
-import { createUserFactory } from "src/application";
+import {
+    OperationId,
+    createUserFactory,
+} from "src/application";
 import {
     UserMapper,
     postgresConfigFromEnv,
     kyselyDatabaseFactory,
 } from "src/infrastructure/database";
+import {
+    pinoRootLoggerFactory,
+    pinoLoggerFactory,
+    RealLogger,
+} from "src/infrastructure/logging";
 
 
 export const createUserCommand = new Command("create-user")
@@ -38,11 +46,18 @@ async function createUser(options: OptionValues): Promise<void> {
         telegramValidator: new TelegramValidator(),
     })
 
+    const pinoRootLogger = pinoRootLoggerFactory()
+    const pinoLogger = pinoLoggerFactory(
+        pinoRootLogger,
+        new OperationId(uuid7()),
+    )
+    const realLogger = new RealLogger(pinoLogger)
+
     const commandProcessor = createUserFactory({
         createUser: createUser,
         userGateway: userMapper,
         txManager: {commit: async () => {}},
-        logger: pino(),
+        logger: realLogger,
     })
     await commandProcessor.process({
         id: new UserId(options.id),
