@@ -1,4 +1,4 @@
-export * from "./entities";
+export * from "./models";
 export * from "./valueObjects";
 export * from "./validators";
 export * from "./errors";

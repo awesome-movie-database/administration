@@ -4,7 +4,7 @@ import {
     EmailValidator,
     TelegramValidator,
 } from "src/domain/validators";
-import { User  } from "src/domain/entities";
+import { User  } from "src/domain/models";
 
 
 export class CreateUser {
