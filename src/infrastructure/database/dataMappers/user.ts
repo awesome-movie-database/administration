@@ -88,12 +88,12 @@ export class UserMapper {
     }
 
     protected rowToUser(row: UserRow): User {
-        return new User(
-            new UserId(row.id),
-            row.name,
-            row.email,
-            row.telegram,
-            row.isActive,
-        )
+        return new User({
+            id: new UserId(row.id),
+            name: row.name,
+            email: row.email,
+            telegram: row.telegram,
+            isActive: row.isActive,
+        })
     }
 }

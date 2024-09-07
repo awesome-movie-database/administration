@@ -42,12 +42,12 @@ export class CreateUser {
             this.telegramValidator.validate(createUserParams.telegram)
         }
 
-        return new User(
-            createUserParams.id,
-            createUserParams.name,
-            createUserParams.email,
-            createUserParams.telegram,
-            createUserParams.isActive,
-        )
+        return new User({
+            id: createUserParams.id,
+            name: createUserParams.name,
+            email: createUserParams.email,
+            telegram: createUserParams.telegram,
+            isActive: createUserParams.isActive,
+        })
     }
 }
