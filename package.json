@@ -5,19 +5,18 @@
     "author": "madnoberson",
     "license": "Apache-2.0",
     "type": "module",
-    "imports": {
-        "#root/*": "./dist/*"
-    },
     "scripts": {
         "lint": "eslint src --config ./.eslint.config.mjs",
         "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json"
     },
     "dependencies": {
+        "reflect-metadata": "0.2.x",
         "commander": "12.1.x",
         "kysely": "0.27.x",
         "pg": "8.12.x",
         "pino": "9.3.x",
-        "uuid": "10.0.x"
+        "uuid": "10.0.x",
+        "inversify": "6.0.x"
     },
     "devDependencies": {
         "@types/pg": "8.11.x",

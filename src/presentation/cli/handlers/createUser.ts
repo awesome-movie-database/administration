@@ -16,6 +16,7 @@ import {
     UserMapper,
     postgresConfigFromEnv,
     kyselyDatabaseFactory,
+    kyselyTxBuilderFactory,
 } from "src/infrastructure/database";
 import {
     pinoRootLoggerFactory,
@@ -37,15 +38,13 @@ export const createUserCommand = new Command("create-user")
 async function createUser(options: OptionValues): Promise<void> {
     const postgresConfig = postgresConfigFromEnv()
     const kyselyDatabase = kyselyDatabaseFactory(postgresConfig)
-    const kyselyTxBuilder = kyselyDatabase.transaction()
+    const kyselyTxBuilder = kyselyTxBuilderFactory(kyselyDatabase)
 
-    const userMapper = new UserMapper(kyselyTxBuilder)
     const createUser = new CreateUser({
         nameValidator: new UserNameValidator(),
         emailValidator: new EmailValidator(),
         telegramValidator: new TelegramValidator(),
     })
-
     const pinoRootLogger = pinoRootLoggerFactory()
     const pinoLogger = pinoLoggerFactory(
         pinoRootLogger,
@@ -53,17 +52,22 @@ async function createUser(options: OptionValues): Promise<void> {
     )
     const realLogger = new RealLogger(pinoLogger)
 
-    const commandProcessor = createUserFactory({
-        createUser: createUser,
-        userGateway: userMapper,
-        txManager: {commit: async () => {}},
-        logger: realLogger,
+    await kyselyTxBuilder.execute(async (transaction) => {
+        const userMapper = new UserMapper(transaction)
+
+        const commandProcessor = createUserFactory({
+            createUser: createUser,
+            userGateway: userMapper,
+            txManager: {async commit() {}},
+            logger: realLogger,
+        })
+        await commandProcessor.process({
+            id: new UserId(options.id),
+            name: options.name,
+            email: options.email,
+            telegram: options.telegram,
+            isActive: options.active,
+        })
     })
-    await commandProcessor.process({
-        id: new UserId(options.id),
-        name: options.name,
-        email: options.email,
-        telegram: options.telegram,
-        isActive: options.active,
-    })
+
 }
