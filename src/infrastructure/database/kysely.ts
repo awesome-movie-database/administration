@@ -5,6 +5,8 @@ import { promises as fileSystem } from "fs";
 import pg from "pg";
 import {
     Kysely,
+    TransactionBuilder,
+    Transaction,
     PostgresDialect,
     CamelCasePlugin,
     Migrator,
@@ -35,6 +37,13 @@ export function kyselyDatabaseFactory(
         dialect: postgresDialect,
         plugins: plugins,
     })
+}
+
+
+export function kyselyTxBuilderFactory(
+    kyselyDatabase: Kysely<Database>,
+): TransactionBuilder<Database> {
+    return kyselyDatabase.transaction()
 }
 
 
