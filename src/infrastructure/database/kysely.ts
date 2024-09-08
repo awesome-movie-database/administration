@@ -6,7 +6,6 @@ import pg from "pg";
 import {
     Kysely,
     TransactionBuilder,
-    Transaction,
     PostgresDialect,
     CamelCasePlugin,
     Migrator,

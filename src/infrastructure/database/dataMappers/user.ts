@@ -1,6 +1,7 @@
 import { Transaction } from "kysely";
 
 import { UserId, User } from "src/domain";
+import { UserGateway } from "src/application";
 import { Database } from "src/infrastructure/database/kysely";
 
 
@@ -13,7 +14,7 @@ interface UserRow {
 }
 
 
-export class UserMapper {
+export class UserMapper implements UserGateway {
     constructor(
         protected readonly transaction: Transaction<Database>,
     ) {}

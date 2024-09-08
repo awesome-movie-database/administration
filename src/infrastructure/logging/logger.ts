@@ -1,7 +1,9 @@
 import { Logger as PinoLogger } from "pino";
 
+import { Logger } from "src/application";
 
-export class RealLogger {
+
+export class RealLogger implements Logger {
     constructor(protected readonly pinoLogger: PinoLogger) {}
 
     debug(message: string, obj?: object): void {
