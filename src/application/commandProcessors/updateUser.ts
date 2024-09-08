@@ -2,12 +2,12 @@ import {
     InvalidUserNameError,
     InvalidEmailError,
     InvalidTelegramError,
-    CreateUser,
+    UpdateUser,
 } from "src/domain";
 import {
     CommandProcessor,
     TransactionProcessor,
-    UserIdIsAlreadyTakenError,
+    UserDoesNotExistError,
     UserNameIsAlreadyTakenError,
     UserEmailIsAlreadyTakenError,
     UserTelegramIsAlreadyTakenError,
@@ -15,63 +15,63 @@ import {
     TransactionManager,
     Logger,
 } from "src/application/common";
-import { CreateUserCommand } from "src/application/commands";
+import { UpdateUserCommand } from "src/application/commands";
 
 
-export function createUserFactory(
-    createUserFactoryParams: {
-        createUser: CreateUser,
+export function updateUserFactory(
+    updateUserFactoryParams: {
+        updateUser: UpdateUser,
         userGateway: UserGateway,
         txManager: TransactionManager,
         logger: Logger,
     },
-): CommandProcessor<CreateUserCommand, void> {
-    const createUserProcessor = new CreateUserProcessor({
-        createUser: createUserFactoryParams.createUser,
-        userGateway: createUserFactoryParams.userGateway,
+): CommandProcessor<UpdateUserCommand, void> {
+    const updateUserProcessor = new UpdateUserProcessor({
+        updateUser: updateUserFactoryParams.updateUser,
+        userGateway: updateUserFactoryParams.userGateway,
     })
     const txProcessor = new TransactionProcessor({
-        processor: createUserProcessor,
-        txManager: createUserFactoryParams.txManager,
+        processor: updateUserProcessor,
+        txManager: updateUserFactoryParams.txManager,
     })
-    const logProcessor = new CreateUserLoggingProcessor({
+    const logProcessor = new UpdateUserLoggingProcessor({
         processor: txProcessor,
-        logger: createUserFactoryParams.logger,
+        logger: updateUserFactoryParams.logger,
     })
 
     return logProcessor
 }
 
 
-class CreateUserProcessor {
-    protected readonly createUser: CreateUser
+class UpdateUserProcessor {
+    protected readonly updateUser: UpdateUser
     protected readonly userGateway: UserGateway
 
     constructor(
-        createUserProcessorProps: {
-            createUser: CreateUser,
+        updateUserProcessorProps: {
+            updateUser: UpdateUser,
             userGateway: UserGateway,
         },
     ) {
-        this.createUser = createUserProcessorProps.createUser
-        this.userGateway = createUserProcessorProps.userGateway
+        this.updateUser = updateUserProcessorProps.updateUser
+        this.userGateway = updateUserProcessorProps.userGateway
     }
 
-    async process(command: CreateUserCommand): Promise<void> {
-        const userWithSameId = await this.userGateway.byId(
-            command.id,
-            false,
-        )
-        if (userWithSameId) {
-            throw new UserIdIsAlreadyTakenError()
+    async process(command: UpdateUserCommand): Promise<void> {
+        const user = await this.userGateway.byId(command.id, false)
+        if (!user) {
+            throw new UserDoesNotExistError()
         }
 
-        const userWithSameName = await this.userGateway.byName(command.name)
-        if (userWithSameName) {
-            throw new UserNameIsAlreadyTakenError()
+        if (command.name !== undefined) {
+            const userWithSameName = await this.userGateway.byName(
+                command.name,
+            )
+            if (userWithSameName) {
+                throw new UserNameIsAlreadyTakenError()
+            }
         }
-
-        if (command.email) {
+        if (command.email !== undefined) {
             const userWithSameEmail = await this.userGateway.byEmail(
                 command.email,
             )
@@ -79,7 +79,7 @@ class CreateUserProcessor {
                 throw new UserEmailIsAlreadyTakenError()
             }
         }
-        if (command.telegram) {
+        if (command.telegram !== undefined) {
             const userWithSameTelegram = await this.userGateway.byTelegram(
                 command.telegram,
             )
@@ -88,35 +88,35 @@ class CreateUserProcessor {
             }
         }
 
-        const newUser = this.createUser.execute({
-            id: command.id,
+        this.updateUser.execute({
+            user: user,
             name: command.name,
             email: command.email,
             telegram: command.telegram,
             isActive: command.isActive,
         })
-        await this.userGateway.save(newUser);
+        this.userGateway.update(user)
     }
 }
 
 
-class CreateUserLoggingProcessor {
+class UpdateUserLoggingProcessor {
     protected readonly processor: TransactionProcessor
     protected readonly logger: Logger
 
     constructor(
-        createUserLoggingProcessorProps: {
+        updateUserLoggingProcessorProps: {
             processor: TransactionProcessor,
             logger: Logger,
         },
     ) {
-        this.processor = createUserLoggingProcessorProps.processor
-        this.logger = createUserLoggingProcessorProps.logger
+        this.processor = updateUserLoggingProcessorProps.processor
+        this.logger = updateUserLoggingProcessorProps.logger
     }
 
-    async process(command: CreateUserCommand): Promise<void> {
+    async process(command: UpdateUserCommand): Promise<void> {
         this.logger.debug(
-            "'Create user' command processing started",
+            "'Update user' command processing started",
             {command: command},
         )
 
@@ -126,13 +126,13 @@ class CreateUserLoggingProcessor {
             this.processError(error as Error)
         }
 
-        this.logger.debug("'Create User' command processing completed")
+        this.logger.debug("'Update User' command processing completed")
     }
 
     protected processError(error: Error): void {
-        if (error instanceof UserIdIsAlreadyTakenError) {
+        if (error instanceof UserDoesNotExistError) {
             this.logger.error(
-                "Unexpected error occurred: User id is already taken",
+                "Unexpected error occurred: User doesn't exist",
             )
         } else if (error instanceof UserNameIsAlreadyTakenError) {
             this.logger.error(

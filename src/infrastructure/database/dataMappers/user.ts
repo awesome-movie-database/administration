@@ -19,13 +19,17 @@ export class UserMapper implements UserGateway {
         protected readonly transaction: Transaction<Database>,
     ) {}
 
-    async byId(id: UserId): Promise<User | null> {
-        const userRow = await this.transaction
+    async byId(id: UserId, acquire: boolean): Promise<User | null> {
+        let expression = this.transaction
             .selectFrom("users as u")
             .selectAll()
             .where("u.id", "=", id.value)
             .limit(1)
-            .executeTakeFirst()
+
+        if (acquire) {
+            expression = expression.forUpdate()
+        }
+        const userRow = await expression.executeTakeFirst()
 
         if (userRow) {
             return this.rowToUser(userRow)
@@ -85,6 +89,19 @@ export class UserMapper implements UserGateway {
                 telegram: user.telegram,
                 isActive: user.isActive,
             })
+            .execute()
+    }
+
+    async update(user: User): Promise<void> {
+        await this.transaction
+            .updateTable("users as u")
+            .set({
+                "name": user.name,
+                "email": user.email,
+                "telegram": user.telegram,
+                "isActive": user.isActive,
+            })
+            .where("u.id", "=", user.id.value)
             .execute()
     }
 

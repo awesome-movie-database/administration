@@ -8,3 +8,5 @@ export class UserNameIsAlreadyTakenError extends ApplicationError {}
 export class UserEmailIsAlreadyTakenError extends ApplicationError {}
 
 export class UserTelegramIsAlreadyTakenError extends ApplicationError {}
+
+export class UserDoesNotExistError extends ApplicationError {}
