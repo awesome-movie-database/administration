@@ -3,6 +3,7 @@ import { Transaction } from "kysely";
 import { UserId, User } from "src/domain";
 import { UserGateway } from "src/application";
 import { Database } from "src/infrastructure/database/kysely";
+import { getDifferences } from "src/infrastructure/getDifference";
 
 
 interface UserRow {
@@ -15,9 +16,13 @@ interface UserRow {
 
 
 export class UserMapper implements UserGateway {
+    protected cleanUsers: Map<UserId, User>
+
     constructor(
         protected readonly transaction: Transaction<Database>,
-    ) {}
+    ) {
+        this.cleanUsers = new Map<UserId, User>()
+    }
 
     async byId(id: UserId, acquire: boolean): Promise<User | null> {
         let expression = this.transaction
@@ -32,7 +37,10 @@ export class UserMapper implements UserGateway {
         const userRow = await expression.executeTakeFirst()
 
         if (userRow) {
-            return this.rowToUser(userRow)
+            const user = this.rowToUser(userRow)
+            const userCopy = Object.assign({}, user)
+            this.cleanUsers.set(user.id, userCopy)
+            return user
         }
         return null
     }
@@ -46,7 +54,10 @@ export class UserMapper implements UserGateway {
             .executeTakeFirst();
 
         if (userRow) {
-            return this.rowToUser(userRow)
+            const user = this.rowToUser(userRow)
+            const userCopy = Object.assign({}, user)
+            this.cleanUsers.set(user.id, userCopy)
+            return user
         }
         return null
     }
@@ -60,7 +71,10 @@ export class UserMapper implements UserGateway {
             .executeTakeFirst();
 
         if (userRow) {
-            return this.rowToUser(userRow)
+            const user = this.rowToUser(userRow)
+            const userCopy = Object.assign({}, user)
+            this.cleanUsers.set(user.id, userCopy)
+            return user
         }
         return null
     }
@@ -74,12 +88,18 @@ export class UserMapper implements UserGateway {
             .executeTakeFirst();
 
         if (userRow) {
-            return this.rowToUser(userRow)
+            const user = this.rowToUser(userRow)
+            const userCopy = Object.assign({}, user)
+            this.cleanUsers.set(user.id, userCopy)
+            return user
         }
         return null
     }
 
     async save(user: User): Promise<void> {
+        const userCopy = Object.assign({}, user)
+        this.cleanUsers.set(user.id, userCopy)
+
         await this.transaction
             .insertInto("users")
             .values({
@@ -93,14 +113,18 @@ export class UserMapper implements UserGateway {
     }
 
     async update(user: User): Promise<void> {
+        if (!this.cleanUsers.has(user.id)) {
+            throw Error("UserMapper has no clean user")
+        }
+        const cleanUser = this.cleanUsers.get(user.id) as User
+        const cleanUserRow = this.userToRow(cleanUser)
+        const userRow = this.userToRow(user)
+
+        const differences = getDifferences(userRow, cleanUserRow)
+
         await this.transaction
             .updateTable("users as u")
-            .set({
-                "name": user.name,
-                "email": user.email,
-                "telegram": user.telegram,
-                "isActive": user.isActive,
-            })
+            .set(differences)
             .where("u.id", "=", user.id.value)
             .execute()
     }
@@ -113,5 +137,15 @@ export class UserMapper implements UserGateway {
             telegram: row.telegram,
             isActive: row.isActive,
         })
+    }
+
+    protected userToRow(user: User): UserRow {
+        return {
+            id: user.id.value,
+            name: user.name,
+            email: user.email,
+            telegram: user.telegram,
+            isActive: user.isActive,
+        }
     }
 }
