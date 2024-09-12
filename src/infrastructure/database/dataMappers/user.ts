@@ -6,7 +6,7 @@ import { Database } from "src/infrastructure/database/kysely";
 import { getDifferences } from "src/infrastructure/getDifference";
 
 
-interface UserRow {
+interface UserAsRow {
     id: string,
     name: string,
     email: string | null,
@@ -34,10 +34,10 @@ export class UserMapper implements UserGateway {
         if (acquire) {
             expression = expression.forUpdate()
         }
-        const userRow = await expression.executeTakeFirst()
+        const userAsRow = await expression.executeTakeFirst()
 
-        if (userRow) {
-            const user = this.rowToUser(userRow)
+        if (userAsRow) {
+            const user = this.rowToUser(userAsRow)
             const userCopy = Object.assign({}, user)
             this.cleanUsers.set(user.id, userCopy)
             return user
@@ -46,15 +46,15 @@ export class UserMapper implements UserGateway {
     }
 
     async byName(name: string): Promise<User | null> {
-        const userRow = await this.transaction
+        const userAsRow = await this.transaction
             .selectFrom("users as u")
             .selectAll()
             .where("u.name", "=", name)
             .limit(1)
             .executeTakeFirst();
 
-        if (userRow) {
-            const user = this.rowToUser(userRow)
+        if (userAsRow) {
+            const user = this.rowToUser(userAsRow)
             const userCopy = Object.assign({}, user)
             this.cleanUsers.set(user.id, userCopy)
             return user
@@ -63,15 +63,15 @@ export class UserMapper implements UserGateway {
     }
 
     async byEmail(email: string): Promise<User | null> {
-        const userRow = await this.transaction
+        const userAsRow = await this.transaction
             .selectFrom("users as u")
             .selectAll()
             .where("u.email", "=", email)
             .limit(1)
             .executeTakeFirst();
 
-        if (userRow) {
-            const user = this.rowToUser(userRow)
+        if (userAsRow) {
+            const user = this.rowToUser(userAsRow)
             const userCopy = Object.assign({}, user)
             this.cleanUsers.set(user.id, userCopy)
             return user
@@ -80,15 +80,15 @@ export class UserMapper implements UserGateway {
     }
 
     async byTelegram(telegram: string): Promise<User | null> {
-        const userRow = await this.transaction
+        const userAsRow = await this.transaction
             .selectFrom("users as u")
             .selectAll()
             .where("u.telegram", "=", telegram)
             .limit(1)
             .executeTakeFirst();
 
-        if (userRow) {
-            const user = this.rowToUser(userRow)
+        if (userAsRow) {
+            const user = this.rowToUser(userAsRow)
             const userCopy = Object.assign({}, user)
             this.cleanUsers.set(user.id, userCopy)
             return user
@@ -100,15 +100,11 @@ export class UserMapper implements UserGateway {
         const userCopy = Object.assign({}, user)
         this.cleanUsers.set(user.id, userCopy)
 
+        const userAsRow = this.userToRow(user)
+
         await this.transaction
             .insertInto("users")
-            .values({
-                id: user.id.value,
-                name: user.name,
-                email: user.email,
-                telegram: user.telegram,
-                isActive: user.isActive,
-            })
+            .values(userAsRow)
             .execute()
     }
 
@@ -129,7 +125,7 @@ export class UserMapper implements UserGateway {
             .execute()
     }
 
-    protected rowToUser(row: UserRow): User {
+    protected rowToUser(row: UserAsRow): User {
         return new User({
             id: new UserId(row.id),
             name: row.name,
@@ -139,7 +135,7 @@ export class UserMapper implements UserGateway {
         })
     }
 
-    protected userToRow(user: User): UserRow {
+    protected userToRow(user: User): UserAsRow {
         return {
             id: user.id.value,
             name: user.name,
