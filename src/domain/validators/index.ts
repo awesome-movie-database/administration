@@ -1,5 +1,2 @@
-export {
-    UserNameValidator,
-    EmailValidator,
-    TelegramValidator
-} from "./user";
+export * from "./user";
+export * from "./superUser"
