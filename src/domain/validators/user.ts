@@ -1,15 +1,11 @@
 import {
     InvalidUserNameError,
-    InvalidEmailError,
     InvalidTelegramError
 } from "src/domain/errors"
 
 
 const USER_NAME_MIN_LENGTH = 5
 const USER_NAME_MAX_LENGTH = 64
-
-const EMAIL_VALIDATION_PATTERN =
-    /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b/
 
 const TELEGRAM_MIN_LENGTH = 5
 const TELEGRAM_MAX_LENGTH = 32
@@ -25,15 +21,6 @@ export class UserNameValidator {
             || nameHasSpaces
         ) {
             throw new InvalidUserNameError()
-        }
-    }
-}
-
-
-export class EmailValidator {
-    validate(value: string): void {
-        if (!EMAIL_VALIDATION_PATTERN.test(value)) {
-            throw new InvalidEmailError()
         }
     }
 }

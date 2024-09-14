@@ -1,7 +1,7 @@
 import { UserId } from "src/domain/valueObjects";
 import {
-    UserNameValidator,
     EmailValidator,
+    UserNameValidator,
     TelegramValidator,
 } from "src/domain/validators";
 import { User  } from "src/domain/models";
