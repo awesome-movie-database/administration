@@ -16,7 +16,7 @@
         "pg": "8.12.x",
         "pino": "9.3.x",
         "uuid": "10.0.x",
-        "inversify": "6.0.x"
+        "inversify": "7.4.x"
     },
     "devDependencies": {
         "@types/pg": "8.11.x",
